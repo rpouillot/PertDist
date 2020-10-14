@@ -114,8 +114,13 @@ class PERT:
         Array:
             Randomly sampled values from the PERT dristribution.
         """
-        
-        rvs_vals = (beta_dist(self.alpha, self.beta).rvs(size=size, random_state=random_state) * self.range) + self.a
+        if size == 1:
+            rvs_vals = (beta_dist(self.alpha, self.beta).rvs(random_state=random_state) * self.range) + self.a
+        else:
+            rvs_vals = np.stack([
+                (beta_dist(self.alpha, self.beta).rvs(random_state=random_state) * self.range) + self.a
+                for _ in range(size)
+            ])
         return rvs_vals
     
     def pdf(self, val:Array) -> Array:
